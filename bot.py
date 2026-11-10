@@ -65,7 +65,22 @@ def main() -> None:
                 BotCommand("cancel", "Bekor qilish"),
             ]
         )
-        logger.info("Bot buyruqlari o'rnatildi: /start /help /cancel")
+        # Bot tavsifi — "What can this bot do?" bloki
+        try:
+            await application.bot.set_my_description(
+                "🤖 Cognify Coding Arena — Python bo'yicha online musobaqalar uchun rasmiy bot!\n\n"
+                "🏟️ KOD ARENA'da ishtirok eting:\n"
+                "🔤 A/B/C/D savollari\n"
+                "🎤 Ta'riflash savollari — ovozli xabar orqali\n"
+                "💻 Amaliy mashqlar — .py fayl yuborish\n\n"
+                "/start bosing — ro'yxatdan o'ting va musobaqada qatnashing! 🏆"
+            )
+            await application.bot.set_my_short_description(
+                "Python bo'yicha online musobaqa! /start bosing va KOD ARENA'da qatnashing. 🏆"
+            )
+            logger.info("Bot tavsifi o'rnatildi")
+        except Exception:
+            logger.exception("Bot tavsifini o'rnatishda xatolik (davom etayapti)")
 
     application = ApplicationBuilder().token(BOT_TOKEN).post_init(post_init).build()
     register_handlers(application)
