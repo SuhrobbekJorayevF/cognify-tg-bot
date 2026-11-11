@@ -20,6 +20,7 @@ from keyboards import (
 )
 from services import channel as channel_service
 from services.formatting import Q_CODE, Q_MCQ, Q_VOICE, esc, user_detail_text
+from handlers.arena_user import restore_attempt
 import re
 
 USERNAME_RE = re.compile(r"^[a-z0-9_]{3,32}$")
@@ -42,9 +43,6 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     # --- Arena davom etmoqda bo'lsa, bosilgan matnni himoyalaymiz ---
     if known and not admin:
-        from db import arenas as db_arenas
-        from handlers.arena_user import restore_attempt
-
         sess = db_arenas.get_session(known["id"])
         if sess:
             restore_attempt(context, known["id"])
