@@ -15,6 +15,7 @@ from telegram.ext import ApplicationBuilder
 from config import ADMIN_ID, BOT_TOKEN, CHANNEL_ID, DATABASE_URL, PORT
 from db import init_db
 from handlers import register_handlers
+from services.channel import verify_channel
 
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -81,6 +82,13 @@ def main() -> None:
             logger.info("Bot tavsifi o'rnatildi")
         except Exception:
             logger.exception("Bot tavsifini o'rnatishda xatolik (davom etayapti)")
+
+        channel_ok = await verify_channel(application.bot)
+        if not channel_ok:
+            logger.critical(
+                "❌ KANAL ISHLAMAYAPTI! CHANNEL_ID yoki bot huquqi noto'g'ri. "
+                "Natijalar/kartalar yuborilmaydi!"
+            )
 
     application = ApplicationBuilder().token(BOT_TOKEN).post_init(post_init).build()
     register_handlers(application)

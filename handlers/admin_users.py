@@ -14,6 +14,7 @@ from keyboards import (
     user_pick_keyboard,
 )
 from services import channel as channel_service
+from services.channel import CHANNEL_STATUS
 from services.formatting import esc, user_detail_text, users_list_text
 
 LETTERS_ALL = ["A", "B", "C", "D"]
@@ -36,8 +37,15 @@ async def handle_users_menu(query, context) -> None:
 async def handle_admin(query, context) -> None:
     await query.answer()
     context.user_data.clear()
+    ok = CHANNEL_STATUS.get("ok")
+    if ok is True:
+        channel_line = f"📡 Kanal: ✅ ulangan ({esc(CHANNEL_STATUS.get('detail', 'OK'))})"
+    elif ok is False:
+        channel_line = f"📡 Kanal: ❌ {esc(CHANNEL_STATUS.get('detail', 'xato'))}\n(hech qanday karta/natija yuborilmayapti!)"
+    else:
+        channel_line = "📡 Kanal: ⏳ tekshirilmagan"
     await query.edit_message_text(
-        "🔐 <b>Admin panel</b>\n\nKerakli amalni tanlang:",
+        f"🔐 <b>Admin panel</b>\n\n{channel_line}\n\nKerakli amalni tanlang:",
         parse_mode="HTML",
         reply_markup=ADMIN_KEYBOARD,
     )

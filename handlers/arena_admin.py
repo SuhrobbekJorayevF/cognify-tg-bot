@@ -17,17 +17,19 @@ from services import channel as channel_service
 from services.formatting import Q_MCQ, esc, now_str
 
 
-async def show_arena_list_edit(query, arena_id: int, reply_markup=None) -> None:
-    arena = db_arenas.get_arena(arena_id)
+async def show_arena_list_edit(query, arena_id: int | None = None, arena: dict | None = None, reply_markup=None) -> None:
+    if arena is None:
+        arena = db_arenas.get_arena(arena_id)
     if not arena:
         await query.edit_message_text("Arena topilmadi.", reply_markup=ARENA_ADMIN_KEYBOARD)
         return
+    arena_id = arena["id"]
     view = {
         "id": arena["id"],
         "title": arena["title"],
         "description": arena.get("description", ""),
         "created": arena["created"],
-        "question_count": len(arena["questions"]),
+        "question_count": len(arena.get("questions", [])),
         "active": arena.get("active", False),
     }
     from services.formatting import arena_summary_text
@@ -133,28 +135,24 @@ async def handle_arena_delyes(query, context, data: str) -> None:
 
 async def handle_arena_toggle(query, context, data: str) -> None:
     arena_id = int(data.split(":", 1)[1])
-    arena = db_arenas.get_arena(arena_id)
+    arena = db_arenas.get_arena(arena_id)  # savollar bilan yuklanadi (bir marta)
     if not arena:
         await query.answer("Arena topilmadi.", show_alert=True)
         return
     new_state = not arena.get("active", False)
     updated = db_arenas.set_active(arena_id, new_state)
-    if not updated:
-        await query.answer("Xatolik — qayta urining.", show_alert=True)
-        return
+    fresh = dict(arena, active=new_state, updated=updated.get("updated", arena.get("updated")))
     event = "🔓 ARENA OCHILDI" if new_state else "🔒 ARENA YOPILDI"
-    fresh = db_arenas.get_arena(arena_id)
+
     msg_id = await channel_service.sync_arena_card(context.bot, fresh)
     if msg_id and msg_id != fresh.get("msg_id"):
         db_arenas.update_arena(arena_id, msg_id=msg_id)
-    # Audit: holat o'zgarishi ham kanalga yoziladi
+    # Ochilish/yopilish audit yozuvi kanalga
     await channel_service.send_text(
-        context.bot,
-        f"{event}\n🏟 #{fresh['id']} — {esc(fresh['title'])}\n🕐 {now_str()}",
+        context.bot, f"{event}\n🏟 #{fresh['id']} — {esc(fresh['title'])}\n🕐 {now_str()}"
     )
-    toast = "🔓 Arena ochildi!" if new_state else "🔒 Arena yopildi!"
-    await query.answer(toast, show_alert=True)
-    await show_arena_list_edit(query, arena_id)
+    await query.answer("🔓 Arena ochildi" if new_state else "🔒 Arena yopildi")
+    await show_arena_list_edit(query, arena=fresh)
 
 
 async def handle_aq_add(query, context, data: str) -> None:
