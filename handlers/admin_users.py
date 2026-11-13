@@ -121,7 +121,7 @@ async def handle_efield(query, context, data: str) -> None:
         return
     field_names = {
         "name": "yangi ism familiyani",
-        "username": "yangi login (username)ni",
+        "username": "yangi loginni",
         "password": "yangi parolni",
     }
     await query.answer()

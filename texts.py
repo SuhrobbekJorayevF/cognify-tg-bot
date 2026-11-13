@@ -10,10 +10,10 @@ HELP_TEXT = (
     "/start — botni ishga tushirish\n"
     "/cancel — joriy amalni bekor qilish\n"
     "/help — yordam\n\n"
-    "Kirish uchun admin bergan username va parol kerak.\n"
+    "Kirish uchun admin bergan login va parol kerak.\n"
     "Birinchi kirishdan keyin Telegram ID'ingiz hisobga biriktiriladi "
     "va keyingi safar hech narsa so'ralmaydi."
 )
 
-LOGIN_ASK_USERNAME = "🔐 <b>Ro'yxatdan o'tishni tasdiqlash</b>\n\nUsername (login) kiriting:"
+LOGIN_ASK_USERNAME = "🔐 <b>Ro'yxatdan o'tishni tasdiqlash</b>\n\nLoginingizni kiriting:"
 LOGIN_ASK_PASSWORD = "🔑 Parolni kiriting:"

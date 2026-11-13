@@ -65,7 +65,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         context.user_data.clear()
         context.user_data["state"] = "login_username"
         await query.edit_message_text(
-            "🔐 <b>Ro'yxatdan o'tishni tasdiqlash</b>\n\nUsername (login) kiriting:",
+            "🔐 <b>Ro'yxatdan o'tishni tasdiqlash</b>\n\nLoginingizni kiriting:",
             parse_mode="HTML",
             reply_markup=CANCEL_KEYBOARD,
         )

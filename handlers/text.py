@@ -64,7 +64,7 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     # ============ TASDIQLASH ============
     if state == "login_username":
         if not text:
-            await update.message.reply_text("Username kiriting:")
+            await update.message.reply_text("Loginingizni kiriting:")
             return
         context.user_data["pending_username"] = normalize_username(text)
         context.user_data["state"] = "login_password"
@@ -82,7 +82,7 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             context.user_data.clear()
             context.user_data["state"] = "login_username"
             await update.message.reply_text(
-                "❌ Username yoki parol noto'g'ri.\n\nQaytadan username kiriting:",
+                "❌ Login yoki parol noto'g'ri.\n\nQaytadan loginingizni kiriting:",
                 reply_markup=CANCEL_KEYBOARD,
             )
             return
@@ -256,7 +256,7 @@ async def text_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             context.user_data["new_user"] = {"full_name": text}
             context.user_data["state"] = "add_username"
             await update.message.reply_text(
-                "2/3 — Login (username) kiriting (masalan: ali_uz):",
+                "2/3 — Login kiriting (masalan: ali_uz):",
                 reply_markup=CANCEL_KEYBOARD,
             )
             return
